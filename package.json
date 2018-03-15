@@ -1,0 +1,11 @@
+{
+    "name": "bbcode2html",
+    "version": "1.0.0",
+    "description": "CityLity synty api",
+    "author": "CityLity",
+    "devDependencies": {
+        "mocha": "3.0.0"
+    },
+    "private": true,
+    "license": "MIT"
+}
