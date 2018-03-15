@@ -1,8 +1,8 @@
 var Parser = require('../../lib/parser');
 var assert = require('assert');
 describe('parser', function(){
-    var test = function(x,y){
-        var p = new Parser();
+    var test = function(x,y,parser){
+        var p = parser||new Parser();
         assert.equal(p.parse(x),y)
     }
     it('base', function(){
@@ -10,6 +10,9 @@ describe('parser', function(){
         test('[i]g[/i]', '<i>g</i>');
         test('[b]g[/b]', '<b>g</b>');
         test('[p]g[/p]', '<p>g</p>');
+        test('[color=red]t[/color]', '<span style="color:red;">t</span>');
+        test('[color=#eeeeee]t[/color]', '<span style="color:#eeeeee;">t</span>');
+        test('[url=http://xx]t[/url]', '<a href="http://xx">t</a>');
     });
     it('ignores not known tags', function(){
         test('[e]g[/e]', '[e]g[/e]');
@@ -28,7 +31,7 @@ describe('parser', function(){
         var Tag = Parser.Tag;
         p.nodes.list = p.nodeFactory.makeConstructor({alias:'ul'});
         p.nodes['*'] = p.nodeFactory.makeConstructor({alias:'li', crossCheck:false});
-        assert.equal(p.parse('[list][*]test\n[*]dobbles[/list]'), '<ul><li>test</li><li>dobbles</li></ul>');
+        test('[list][*]mok\n[*]dobbles[/list]', '<ul><li>mok</li><li>dobbles</li></ul>',p);
     });
 
     it('handles nested list', function(){
@@ -36,7 +39,7 @@ describe('parser', function(){
         var Tag = Parser.Tag;
         p.nodes.list = p.nodeFactory.makeConstructor({alias:'ul', nesting:'*'});
         p.nodes['*'] = p.nodeFactory.makeConstructor({alias:'li', crossCheck:false});
-        assert.equal(p.parse('[list][*]te[list][*]ok[/list]st[*]dobbles[/list]'), '<ul><li>te<ul><li>ok</li></ul>st</li><li>dobbles</li></ul>');
+        test('[list][*]te[list][*]ok[/list]st[*]dobbles[/list]', '<ul><li>te<ul><li>ok</li></ul>st</li><li>dobbles</li></ul>',p);
     });
     it('escapes html', function(){
         test('[u]<li>test</li>[/u]', '<u>litest/li</u>');
@@ -62,6 +65,7 @@ describe('parser', function(){
         var p = new Parser();
         var Tag = Parser.Tag;
         p.nodes.url = p.nodeFactory.makeConstructor({html:function(){
+            //yes injection on tag
             return '<a href="'+this.tag.attr+'">'+this.nodes.map(x=>x.html()).join('')+'</a>';
         }});
         assert.equal(p.parse('[url=http://ok]te[i]i[/i]st[/url]'),'<a href="http://ok">te<i>i</i>st</a>')
