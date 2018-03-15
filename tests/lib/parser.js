@@ -38,4 +38,32 @@ describe('parser', function(){
         p.nodes['*'] = p.nodeFactory.makeConstructor({alias:'li', crossCheck:false});
         assert.equal(p.parse('[list][*]te[list][*]ok[/list]st[*]dobbles[/list]'), '<ul><li>te<ul><li>ok</li></ul>st</li><li>dobbles</li></ul>');
     });
+    it('escapes html', function(){
+        test('[u]<li>test</li>[/u]', '<u>litest/li</u>');
+    });
+    it('customizes html', function(){
+        var called = false;
+        var thrown = false;
+        var p = new Parser({escapeHtml:function(txt){
+            if(txt=='a'){
+                called = true;
+                throw 'a';
+            }
+        }});
+        try{
+            assert.equal(p.parse('a'),'whatever')
+        }catch(e){
+            thrown = true;
+        }
+        assert(called);
+        assert(thrown);
+    });
+    it('customs html', function(){
+        var p = new Parser();
+        var Tag = Parser.Tag;
+        p.nodes.url = p.nodeFactory.makeConstructor({html:function(){
+            return '<a href="'+this.tag.attr+'">'+this.nodes.map(x=>x.html()).join('')+'</a>';
+        }});
+        assert.equal(p.parse('[url=http://ok]te[i]i[/i]st[/url]'),'<a href="http://ok">te<i>i</i>st</a>')
+    });
 })
