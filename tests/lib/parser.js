@@ -84,4 +84,22 @@ describe('parser', function(){
         }});
         assert.equal(p.parse('[url=http://ok]te[i]i[/i]st[/url]'),'<a href="http://ok">te<i>i</i>st</a>')
     });
+
+    it('basic alias', function(){
+        var p = new Parser();
+        p.nodes.quote = p.nodeFactory.makeConstructor({alias:'blockquote'});
+        assert.equal(p.parse('[quote]x[/quote]'),'<blockquote>x</blockquote>')
+    });
+
+    it('ignore tags', function(){
+        var p = new Parser();
+        delete p.nodes.url;
+        assert.equal(p.parse('[url=x]x[/url]'),'[url=x]x[/url]')
+    });
+
+    it('new node', function(){
+        var p = new Parser();
+        p.nodes.h1 = p.nodeFactory.makeConstructor();
+        assert.equal(p.parse('[h1=x]x[/h1]'),'<h1>x</h1>')
+    });
 })

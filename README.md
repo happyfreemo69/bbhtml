@@ -47,6 +47,10 @@ note:
 
 you can add your own tag by modifying parser.nodes
 
+* custom html
+
+In case you want to manage tag attributes
+
     var parser = new Parser
     parser.nodes.url = this.nodeFactory.makeConstructor({
         validTag: function(){
@@ -59,3 +63,22 @@ you can add your own tag by modifying parser.nodes
             return '<span style="color:'+color+';">'+this.nodes.map(node=>node.html()).join('')+'</span>';
         }
     })
+
+* basic nodes
+
+For not parsed tags such as h1
+
+    var parser = new Parser
+    parser.nodes.h1 = parser.nodeFactory.makeConstructor()
+
+Aliased nodes
+
+    var parser = new Parser
+    parser.nodes.quote = parser.nodeFactory.makeConstructor({alias: 'blockquote'})
+
+* removing parsed tag
+    
+Should you want no to parse urls
+
+    var parser = new Parser
+    delete parser.nodes.url
