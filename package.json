@@ -1,11 +1,10 @@
 {
-    "name": "bbcode2html",
+    "name": "bbhtml",
     "version": "1.0.0",
-    "description": "CityLity synty api",
+    "description": "bbcode parser to html",
     "author": "CityLity",
     "devDependencies": {
         "mocha": "3.0.0"
     },
-    "private": true,
     "license": "MIT"
 }

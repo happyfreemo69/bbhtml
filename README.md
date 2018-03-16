@@ -13,14 +13,15 @@ this one handling nested lists
     test('[color=#eeeeee]t[/color]', '<span style="color:#eeeeee;">t</span>');
     test('[url=http://xx]t[/url]', '<a href="http://xx">t</a>');
     test('[url=http://x"x]t[/url]', '<a href="http://xx">t</a>');
+    test('[list][*]te[list][*]ok[/list]st[*]dobbles[/list]', '<ul><li>te<ul><li>ok</li></ul>st</li><li>dobbles</li></ul>');
+    test('[p]g\no\r\nk\r![/p]', '<p>g<br/>o<br/>k<br/>!</p>');
     test('[e]g[/e]', '[e]g[/e]');
     test('d[u]g[b]test[/b]gro[/u]c', 'd<u>g<b>test</b>gro</u>c');
     test('d[u]g[b]te[i]i[/i]st[/b]gro[/u]c', 'd<u>g<b>te<i>i</i>st</b>gro</u>c');
     test('d[u]g[b]te[u]i[/u]st[/b]gro[/u]c', 'd<u>g<b>te<u>i</u>st</b>gro</u>c');
     test('[list][*]mok\n[*]dobbles[/list]', '<ul><li>mok</li><li>dobbles</li></ul>',p);
-    test('[list][*]te[list][*]ok[/list]st[*]dobbles[/list]', '<ul><li>te<ul><li>ok</li></ul>st</li><li>dobbles</li></ul>',p);
     test('[u]<li>test</li>[/u]', '<u>&lt;li&gt;test&lt;/li&gt;</u>');
-    test('[u]<li>test</li>[/u]', '<u>gro</u>', p);
+
 
 note:
 
@@ -35,19 +36,23 @@ note:
 
     var p = new Parser();
     try{
-        var html = p.parse('thebbcodestring')
+        var html = p.parse('thebbcodestring').html()
     }catch(e){
         //errors may be raised, some because I should learn how to code, some you may want to hinder by customizing the parser
     }
 
 ### customization:
 
-    Parser accepts {escapeHtml:str=>str} (this one would not escape anything..)
-    Parser::parse will not escape any not configured tag
+#### options
 
-you can add your own tag by modifying parser.nodes
+Parser accepts {escapeHtml:str=>str, cr2br:str=>str} (those one would not replace anything..)
 
-* custom html
+- by default escapes <>&
+- by default replaces \n,\r\n,\r in text nodes
+
+Parser::parse will not escape any not configured tag (idem [whatever][/whatever] will be let as is)
+
+#### custom html
 
 In case you want to manage tag attributes
 
@@ -64,9 +69,9 @@ In case you want to manage tag attributes
         }
     })
 
-* basic nodes
+#### basic nodes
 
-For not parsed tags such as h1
+Adding more tags (e.g h1 is not handled by default)
 
     var parser = new Parser
     parser.nodes.h1 = parser.nodeFactory.makeConstructor()
@@ -76,9 +81,9 @@ Aliased nodes
     var parser = new Parser
     parser.nodes.quote = parser.nodeFactory.makeConstructor({alias: 'blockquote'})
 
-* removing parsed tag
+#### removing parsed tag
     
-Should you want no to parse urls
+Should you want not to parse urls
 
     var parser = new Parser
     delete parser.nodes.url
