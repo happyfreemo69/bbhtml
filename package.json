@@ -1,6 +1,6 @@
 {
     "name": "bbhtml",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "bbcode parser to html",
     "author": "CityLity",
     "devDependencies": {
