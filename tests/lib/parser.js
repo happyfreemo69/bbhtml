@@ -6,7 +6,7 @@ describe('parser', function(){
         assert.equal(p.parse(x).html(),y)
     }
     it('base', function(){
-        test('[u]g[/u]', '<u>g</u>');
+        test('[u]g[/u]', '<span style="text-decoration: underline;">g</span>');
         test('[i]g[/i]', '<i>g</i>');
         test('[b]g[/b]', '<b>g</b>');
         test('[p]g[/p]', '<p>g</p>');
@@ -16,6 +16,7 @@ describe('parser', function(){
         test('[url=http://x"x]t[/url]', '<a href="http://xx">t</a>');
         test('[list][*]te[list][*]ok[/list]st[*]dobbles[/list]', '<ul><li>te<ul><li>ok</li></ul>st</li><li>dobbles</li></ul>');
         test('[p]g\no\r\nk\r![/p]', '<p>g<br/>o<br/>k<br/>!</p>');
+        test('[quote]b[/quote]', '<blockquote>b</blockquote>');
     });
 
     it('ignores not known tags', function(){
@@ -23,15 +24,15 @@ describe('parser', function(){
     });
 
     it('embeds', function(){
-        test('d[u]g[b]test[/b]gro[/u]c', 'd<u>g<b>test</b>gro</u>c');
+        test('d[p]g[b]test[/b]gro[/p]c', 'd<p>g<b>test</b>gro</p>c');
     });
 
     it('embeds2', function(){
-        test('d[u]g[b]te[i]i[/i]st[/b]gro[/u]c', 'd<u>g<b>te<i>i</i>st</b>gro</u>c');
+        test('d[p]g[b]te[i]i[/i]st[/b]gro[/p]c', 'd<p>g<b>te<i>i</i>st</b>gro</p>c');
     });
 
     it('embeds with same tags', function(){
-        test('d[u]g[b]te[u]i[/u]st[/b]gro[/u]c', 'd<u>g<b>te<u>i</u>st</b>gro</u>c');
+        test('d[p]g[b]te[p]i[/p]st[/b]gro[/p]c', 'd<p>g<b>te<p>i</p>st</b>gro</p>c');
     });
 
     it('handles list', function(){
@@ -53,12 +54,12 @@ describe('parser', function(){
     });
 
     it('escapes html', function(){
-        test('[u]<li>test</li>[/u]', '<u>&lt;li&gt;test&lt;/li&gt;</u>');
+        test('[p]<li>test</li>[/p]', '<p>&lt;li&gt;test&lt;/li&gt;</p>');
     });
 
     it('customs escapes html', function(){
         var p = new Parser({escapeHtml:x=>'gro'})
-        assert.equal(p.parse('[u]<li>test</li>[/u]').html(), '<u>gro</u>', p);
+        assert.equal(p.parse('[p]<li>test</li>[/p]').html(), '<p>gro</p>', p);
     });
 
     it('customizes html', function(){

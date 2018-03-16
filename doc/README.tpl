@@ -5,24 +5,7 @@ this one handling nested lists
 ### covers:
     
     $grep 'test(' tests/lib/parser.js
-    test('[u]g[/u]', '<span style="text-decoration: underline;">g</span>');
-    test('[i]g[/i]', '<i>g</i>');
-    test('[b]g[/b]', '<b>g</b>');
-    test('[p]g[/p]', '<p>g</p>');
-    test('[color=red]t[/color]', '<span style="color:red;">t</span>');
-    test('[color=#eeeeee]t[/color]', '<span style="color:#eeeeee;">t</span>');
-    test('[url=http://xx]t[/url]', '<a href="http://xx">t</a>');
-    test('[url=http://x"x]t[/url]', '<a href="http://xx">t</a>');
-    test('[list][*]te[list][*]ok[/list]st[*]dobbles[/list]', '<ul><li>te<ul><li>ok</li></ul>st</li><li>dobbles</li></ul>');
-    test('[p]g\no\r\nk\r![/p]', '<p>g<br/>o<br/>k<br/>!</p>');
-    test('[quote]b[/quote]', '<blockquote>b</blockquote>');
-    test('[e]g[/e]', '[e]g[/e]');
-    test('d[p]g[b]test[/b]gro[/p]c', 'd<p>g<b>test</b>gro</p>c');
-    test('d[p]g[b]te[i]i[/i]st[/b]gro[/p]c', 'd<p>g<b>te<i>i</i>st</b>gro</p>c');
-    test('d[p]g[b]te[p]i[/p]st[/b]gro[/p]c', 'd<p>g<b>te<p>i</p>st</b>gro</p>c');
-    test('[list][*]mok\n[*]dobbles[/list]', '<ul><li>mok</li><li>dobbles</li></ul>',p);
-    test('[p]<li>test</li>[/p]', '<p>&lt;li&gt;test&lt;/li&gt;</p>');
-
+{{COVERAGE}}
 
 note:
 
@@ -88,4 +71,3 @@ Should you want not to parse urls
 
     var parser = new Parser
     delete parser.nodes.url
-

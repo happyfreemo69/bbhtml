@@ -1,7 +1,7 @@
 mocha=./node_modules/mocha/bin/mocha --recursive
 folders=lib
 dirs=$(addprefix tests/,$(folders))
-.PHONY: tests $(folders) cover
+.PHONY: tests $(folders) readme
 test: $(folders)
 lib:
 	@$(mocha) tests/lib
@@ -12,6 +12,9 @@ custom:
 
 %:
 	@:
+
+readme:
+	./doc/generate.sh
 
 jenkins:
 	@$(mocha) --reporter mocha-jenkins-reporter --colors --reporter-options junit_report_path=./test-reports/report.xml $(dirs)
