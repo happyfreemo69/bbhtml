@@ -13,19 +13,25 @@ describe('parser', function(){
         test('[color=red]t[/color]', '<span style="color:red;">t</span>');
         test('[color=#eeeeee]t[/color]', '<span style="color:#eeeeee;">t</span>');
         test('[url=http://xx]t[/url]', '<a href="http://xx">t</a>');
+        test('[url=http://x"x]t[/url]', '<a href="http://xx">t</a>');
     });
+
     it('ignores not known tags', function(){
         test('[e]g[/e]', '[e]g[/e]');
     });
+
     it('embeds', function(){
         test('d[u]g[b]test[/b]gro[/u]c', 'd<u>g<b>test</b>gro</u>c');
     });
+
     it('embeds2', function(){
         test('d[u]g[b]te[i]i[/i]st[/b]gro[/u]c', 'd<u>g<b>te<i>i</i>st</b>gro</u>c');
     });
+
     it('embeds with same tags', function(){
         test('d[u]g[b]te[u]i[/u]st[/b]gro[/u]c', 'd<u>g<b>te<u>i</u>st</b>gro</u>c');
     });
+
     it('handles list', function(){
         var p = new Parser();
         var Tag = Parser.Tag;
@@ -41,9 +47,16 @@ describe('parser', function(){
         p.nodes['*'] = p.nodeFactory.makeConstructor({alias:'li', crossCheck:false});
         test('[list][*]te[list][*]ok[/list]st[*]dobbles[/list]', '<ul><li>te<ul><li>ok</li></ul>st</li><li>dobbles</li></ul>',p);
     });
+
     it('escapes html', function(){
-        test('[u]<li>test</li>[/u]', '<u>litest/li</u>');
+        test('[u]<li>test</li>[/u]', '<u>&lt;li&gt;test&lt;/li&gt;</u>');
     });
+
+    it('customs escapes html', function(){
+        var p = new Parser({escapeHtml:x=>'gro'})
+        test('[u]<li>test</li>[/u]', '<u>gro</u>', p);
+    });
+
     it('customizes html', function(){
         var called = false;
         var thrown = false;
@@ -61,6 +74,7 @@ describe('parser', function(){
         assert(called);
         assert(thrown);
     });
+
     it('customs html', function(){
         var p = new Parser();
         var Tag = Parser.Tag;
