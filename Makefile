@@ -1,4 +1,4 @@
-mocha=./node_modules/mocha/bin/mocha --recursive
+mocha=./node_modules/mocha/bin/_mocha --recursive
 folders=lib
 dirs=$(addprefix tests/,$(folders))
 .PHONY: tests $(folders) readme
